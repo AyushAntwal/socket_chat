@@ -4,15 +4,30 @@ import { socket } from "../socket";
 
 
 function User1() {
-
-  const io = useRef(null);
+  const [mesg, setMesg] = useState();
   useEffect(()=>{
-    io.current = socket();
+    socket.emit('JOIN');
+
+
+  })
+  useEffect(()=>{
+    socket.on("hello",()=>{
+      console.log("HEllo");
+
+
+    })
   },[socket])
 
-  const [mesg, setMesg] = useState();
+  function HandelJoinEvent() {
+    socket.emit("START", {
+      username: "User1",
+      user: "Student",
+      roomId : "123456789",
+    })
+  }
+
   function HandelMessage(e) {
-    io.emit("MESSAGE", {
+    socket.emit("MESSAGE", {
       message: mesg,
     })
   }
@@ -21,12 +36,13 @@ function User1() {
   return (
     <div>
       <h3>User 1</h3>
-      <form >
+      <div>
         <textarea type="text" name="mgs" rows={5} onChange={e => setMesg(e.target.value)} />
         <div>
           <button onClick={HandelMessage}>Send</button>
+          <button onClick={HandelJoinEvent}>Join</button>
         </div>
-      </form>
+      </div>
     </div>
   )
 }

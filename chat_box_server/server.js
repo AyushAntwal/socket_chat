@@ -10,29 +10,36 @@ const io = require("socket.io")(server, {
   }
 });
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.send("hello Server!");
 })
 
 server.listen(PORT, () => {
   console.log(`Server is Running over port ${PORT} with The SOCKET`);
 });
-
+const client = {}
 io.on("connection", (socket) => {
-  console.log("Successfuly Connected! : ",socket.id);
+  console.log("Successfuly Connected! : ", socket.id);
+  var ID = "";
+  socket.on("JOIN", () => {
+    socket.on("START",({ roomId, username, user })=>{
+      socket.join(roomId);
+      client[socket.id] = {roomId , user , user};
 
-  socket.on("MESSAGE", (data)=>{
-    console.log(data);
-    socket.broadcast.emit("MESSAGE",data);
+      socket.to(roomId).emit("hello")
+      console.log(client);
+    })
+
+    socket.on('disconnect', (socket) => {
+      console.log('A user disconnected',socket);
+    });
   });
 
-  socket.on('disconnect', function () {
-    console.log('A user disconnected');
- });
+ 
 
- return ()=> {
-  socket.off('disconnect', function (){
-    console.log("Closed");
-  })
- }
+  return () => {
+    socket.off('disconnect', () => {
+      console.log("Closed");
+    })
+  }
 });

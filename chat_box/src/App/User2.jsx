@@ -5,17 +5,21 @@ import { socket } from "../socket";
 
 function User2() {
 
+  function HandelJoinEvent() {
+    socket.emit("START", {
+      roomId : "987654321",
+    })
+  }
 
-  
   return (
     <div>
       <h3>User 2</h3>
-      <form >
+      <div >
         <textarea type="text" name="mgs" rows={5}  />
         <div>
-          <button>Send</button>
+          <button onClick={HandelJoinEvent}>Join</button>
         </div>
-      </form>
+      </div>
     </div>
   )
 }
