@@ -17,29 +17,43 @@ app.get("/", (req, res) => {
 server.listen(PORT, () => {
   console.log(`Server is Running over port ${PORT} with The SOCKET`);
 });
-const client = {}
-io.on("connection", (socket) => {
-  console.log("Successfuly Connected! : ", socket.id);
-  var ID = "";
-  socket.on("JOIN", () => {
-    socket.on("START",({ roomId, username, user })=>{
-      socket.join(roomId);
-      client[socket.id] = {roomId , user , user};
+const client = [];
+io.on("connection", (socket) => {  
+  socket.on("JOIN", ({ roomId, username, user }) => {
+    client[socket.id] = {roomId , username , user};
+    socket.join(roomId);
 
-      socket.to(roomId).emit("hello")
-      console.log(client);
-    })
+    // socket.to(socket.id).emit("DATA",client)
 
-    socket.on('disconnect', (socket) => {
-      console.log('A user disconnected',socket);
+
+    socket.broadcast.emit("INFO"); 
+    // console.log(client); 
+    socket.on('disconnect', () => {
+      console.log('A user disconnected',socket.id);
+      delete client[socket.id];
     });
   });
-
  
+  socket.on("START",({event})=>{
+    console.log(event);
+    socket.in(event).emit("START",{
+      message : "Event is Started!!!"
+    });
+  })
+  socket.on("PAUSE",({event})=>{
+    console.log(event);
+    socket.in(event).emit("PAUSE",{
+      message : "Event is Paused!!!"
+    });
+  })
+
+
+
 
   return () => {
     socket.off('disconnect', () => {
       console.log("Closed");
+      client = [];
     })
   }
 });
