@@ -1,19 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { socket } from "../socket";
+import { initsocket } from "../socket";
 
 
 
 function Admin() {
+  const io = useRef(null);
   const [mesg, setMesg] = useState();
+  const [event, setEvent] = useState();
 
-  useEffect(()=>{
-     socket.emit("JOIN")
-  },[])
+  useEffect(() => {
+    const init = async () => {
+      io.current = await initsocket();
+    }
+    init();
+  }, [])
+
+  function HandelJoinEvent() {
+    // io.current.emit("JOIN", {
+    //   roomId: "EVENT1",
+    //   user: "Admin",
+    //   username: "CEO"
+    // })
+  }
+
   function HandelStartEvent() {
-    socket.emit("START", {
-      roomId : "123456789",
-      user : "Admin",
-      username : "CEO"
+    io.current.emit("START", {
+      event,
+    })
+  }
+  function HandelPauseEvent() {
+    io.current.emit("PAUSE", {
+      event,
+    })
+  }
+  function HandelEndEvent() {
+    io.current.emit("END", {
+      event,
     })
   }
 
@@ -24,7 +46,13 @@ function Admin() {
       <div>
         {/* <textarer type="text" name="mgs" rows={5} onChange={e => setMesg(e.target.value)} /> */}
         <div>
-          <button onClick={HandelStartEvent}>START EVENT</button>
+        <select onChange={e => setEvent(e.target.value)}>
+              <option>EVENT1</option>
+              <option>EVENT2</option>
+            </select><hr/>
+          <button onClick={HandelStartEvent}>START EVENT</button>{"   "}
+          <button onClick={HandelPauseEvent}>PAUSE EVENT</button>{"   "}
+          <button onClick={HandelEndEvent}>PAUSE EVENT</button>{"   "}
         </div>
       </div>
     </div>

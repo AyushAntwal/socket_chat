@@ -1,5 +1,3 @@
-import { socket } from "../socket";
-
 import React from 'react'
 
 function Home() {
@@ -7,6 +5,8 @@ function Home() {
   return (
     <div>
       <a href="/admin"><button>Admin</button></a>
+      <br/>
+      <a href="/user"><button>Student</button></a>
       <br/>
       <a href="/user1"><button>User 1</button></a>
       <br/>

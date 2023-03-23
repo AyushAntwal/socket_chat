@@ -1,36 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { socket } from "../socket";
+import { initsocket } from "../socket";
 
 
 
 function User1() {
+  const io = useRef(null);
   const [mesg, setMesg] = useState();
-  useEffect(()=>{
-    socket.emit('JOIN');
 
+  useEffect(() => {
+    const init = async () => {
+      io.current = await initsocket();
 
-  })
-  useEffect(()=>{
-    socket.on("hello",()=>{
-      console.log("HEllo");
-
-
-    })
-  },[socket])
-
+      io.current.onAny((data)=>{
+        console.log(data);
+      })
+ 
+    }
+    init(); 
+  }, [])
   function HandelJoinEvent() {
-    socket.emit("START", {
+    io.current.emit("JOIN", {
       username: "User1",
       user: "Student",
-      roomId : "123456789",
+      roomId : "EVENT1",
     })
   }
 
-  function HandelMessage(e) {
-    socket.emit("MESSAGE", {
-      message: mesg,
-    })
-  }
+  // function HandelMessage(e) {
+  //   socket.emit("MESSAGE", {
+  //     message: mesg,
+  //   })
+  // }
 
 
   return (
@@ -39,7 +39,7 @@ function User1() {
       <div>
         <textarea type="text" name="mgs" rows={5} onChange={e => setMesg(e.target.value)} />
         <div>
-          <button onClick={HandelMessage}>Send</button>
+          {/* <button onClick={HandelMessage}>Send</button> */}
           <button onClick={HandelJoinEvent}>Join</button>
         </div>
       </div>
