@@ -5,23 +5,25 @@ import { socket } from "../socket";
 
 function User3() {
   const [mesg, setMesg] = useState();
-  useEffect(()=>{
-    socket.emit('JOIN');
-  })
+  // useEffect(()=>{
+  //   socket.onAny((data)=>{
+  //     console.log(data);
+  //   })
+  // },[socket])
 
-  function HandelJoinEvent() {
-    socket.emit("START", {
-      username: "User3",
-      roomId : "123456789",
-      user : "Student"
-    })
-  }
+  // function HandelJoinEvent() {
+  //   socket.emit("JOIN", {
+  //     username: "User3",
+  //     roomId : "123456789",
+  //     user : "Student"
+  //   })
+  // }
 
-  function HandelMessage(e) {
-    socket.emit("MESSAGE", {
-      message: mesg,
-    })
-  }
+  // function HandelMessage(e) {
+  //   socket.emit("MESSAGE", {
+  //     message: mesg,
+  //   })
+  // }
 
 
   return (
@@ -30,8 +32,8 @@ function User3() {
       <div>
         <textarea type="text" name="mgs" rows={5} onChange={e => setMesg(e.target.value)} />
         <div>
-          <button onClick={HandelMessage}>Send</button>
-          <button onClick={HandelJoinEvent}>Join</button>
+          {/* <button onClick={HandelMessage}>Send</button>
+          <button onClick={HandelJoinEvent}>Join</button> */}
         </div>
       </div>
     </div>
